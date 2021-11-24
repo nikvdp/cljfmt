@@ -1,11 +1,22 @@
 # cljfmt-graalvm
 
+> **@NOTE:** this is a clone of 
+> [gitlab.com/konrad.mrozek/cljfmt-graalvm/](https://gitlab.com/konrad.mrozek/cljfmt-graalvm/)
+> lightly modified to format input from stdin or a file
+
 A Clojure code formatter using cljfmt built with graalvm.
 
 ## Usage
 
+
+Format a file in place:
 ```sh
 ./cljfmt source-file.clj
+```
+
+Format from stdin:
+```sh
+cat some-file.clj | ./cljfmt
 ```
 
 ## Build
