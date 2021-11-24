@@ -10,3 +10,6 @@ pom.xml.asc
 .hgignore
 .hg/
 /cljfmt
+META-INF/
+*.build_artifacts.txt
+.lsp

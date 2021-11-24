@@ -2,7 +2,8 @@
 
 > **@NOTE:** this is a clone of 
 > [gitlab.com/konrad.mrozek/cljfmt-graalvm/](https://gitlab.com/konrad.mrozek/cljfmt-graalvm/)
-> lightly modified to format input from stdin or a file
+> lightly modified to format input from stdin or a file. I've also built native
+> images and attached them as a release for Linux and Mac for convenience
 
 A Clojure code formatter using cljfmt built with graalvm.
 
@@ -28,27 +29,49 @@ To build the binary yourself, here are some instructions.
 - Download [GraalVM](http://www.graalvm.org/downloads/) for your machine. You will need the EE version if you're using MacOS.
 - Set `JAVA_HOME` to the GraalVM home directory, e.g.
 
-```sh
-export JAVA_HOME=~/Downloads/graalvm-1.0.0-rc1/Contents/Home
-```
+    ```sh
+    export JAVA_HOME=~/Downloads/graalvm-1.0.0-rc1/Contents/Home
+    ```
     
 - Set the `PATH` to use GraalVM's binaries, e.g.
 
-```sh
-export PATH=$PATH:~/Downloads/graalvm-1.0.0-rc1/Contents/Home/bin
-```
+    ```sh
+    export PATH=$PATH:~/Downloads/graalvm-1.0.0-rc1/Contents/Home/bin
+    ```
 
 - Create the uberjar:
 
-```sh
-lein uberjar
-```
+    ```sh
+    lein uberjar
+    ```
 
-- Finally, create the binary:
+- Use GraalVM's assisted configuration to generate reflection files:
 
-``` sh
-native-image -jar target/cljfmt-graalvm-0.1.0-SNAPSHOT-standalone.jar -H:Name="cljfmt"
-```
+    ```sh
+    mkdir -p ./META-INF/native-image 
+
+    # with stdin
+    cat project.clj | java -agentlib:native-image-agent=config-output-dir=./META-INF/native-image -jar target/cljfmt-graalvm-0.1.0-SNAPSHOT-standalone.jar
+
+    # with cmdline arg, now using config-merge-dir to add any extra methods
+    java -agentlib:native-image-agent=config-merge-dir=./META-INF/native-image -jar target/cljfmt-graalvm-0.1.0-SNAPSHOT-standalone.jar ./project.clj
+    ```
+
+
+- Finally, create the binary adding the GraalVM assisted configuration output to the classpath:
+
+    ```sh
+    native-image \
+        -jar target/cljfmt-graalvm-0.1.0-SNAPSHOT-standalone.jar \
+        -H:Name="cljfmt" \
+        -cp ./META-INF/native-image  \
+        --no-fallback \
+        --report-unsupported-elements-at-runtime \
+        --allow-incomplete-classpath \
+        -H:+InlineBeforeAnalysis \
+        -H:ConfigurationFileDirectories=graalvm \
+        --initialize-at-build-time
+    ```
 
 
 ## Integrate with Emacs
