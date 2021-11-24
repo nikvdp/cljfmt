@@ -3,7 +3,19 @@
 > **@NOTE:** this is a clone of 
 > [gitlab.com/konrad.mrozek/cljfmt-graalvm/](https://gitlab.com/konrad.mrozek/cljfmt-graalvm/)
 > lightly modified to format input from stdin or a file. I've also built native
-> images and attached them as a release for Linux and Mac for convenience
+> images and attached them as a release for
+> [Linux](https://github.com/nikvdp/cljfmt/releases/download/v0.6.1/cljfmt.Linux)
+> and
+> [Mac](https://github.com/nikvdp/cljfmt/releases/download/v0.6.1/cljfmt.Darwin)
+> for convenience.
+> 
+> To use, just download one of the binaries, `chmod +x` it and put it somewhere on your path.
+> For the ~~lazy~~efficient, pasting the snippet below into your term should get the job done:
+> ```
+> wget -O ~/cljfmt "https://github.com/nikvdp/cljfmt/releases/download/v0.6.1/cljfmt.$(uname)"
+> chmod +x ~/cljfmt
+> sudo mv ~/cljfmt /usr/local/bin
+> ```
 
 A Clojure code formatter using cljfmt built with graalvm.
 
